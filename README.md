@@ -1,31 +1,21 @@
-﻿# Interledger Gate (ticker)
-> Autonomous Production-Grade Protocol
+# Interledger Gate — QMOOSA-0955
 
-[![CI/CD Pipeline](https://github.com/elon00/interledger-gate/actions/workflows/ci-cd-pipeline.yml/badge.svg)](https://github.com/elon00/interledger-gate/actions)
-[![Score](https://img.shields.io/badge/Reality%20Gates-100%2F100%20GENUINE%20GREEN-2ea44f?style=flat-square)](#reality-check-verification)
-[![NIST PQC](https://img.shields.io/badge/Security-NIST%20FIPS%20203%20%26%20204-blue?style=flat-square)](#security)
-[![Verified](https://img.shields.io/badge/Status-100%25%20Verified-gold?style=flat-square)](#pillars)
+**Status: limited offline accounting invariant checker; NOT an Interledger Protocol (ILPv4) implementation, live settlement connector, production-certified software, FIPS-validated cryptography, or deployment-ready service.**
 
----
+This repository is the **tests** component mapped to canonical QMOOSA-0955 in the [QMOOSA-1000 coordinator](https://github.com/elon00/qmoosa-1000). The new `interledger_gate.ledger` module checks exact-integer per-asset balance conservation, rejects duplicate transfer IDs, insufficient funds, invalid amounts, unknown accounts, overflow, and performs atomic in-memory batches. It has **no persistence, external ledger, packet encoding, network I/O, trust/authentication, or funds transfer**. These checks do not prove Interledger interoperability.
 
-## About Interledger Gate
-**Interledger Gate (\ticker)** is an autonomous, decentralized, post-quantum intelligence protocol engineered for production-grade operational efficiency and cryptographic trust.
+## Offline verification
 
----
+```bash
+python -m compileall -q interledger_gate tests
+python -m unittest discover -s tests -p 'reality_battery.py' -v
+python -m tests.reality_check_harness
+cargo fmt --check
+cargo test
+```
 
-## Running the Protocol Locally
+CI separately runs real Python regressions and Rust tests, and CodeQL Python analysis. A passing PR-head workflow does **not** establish current default-branch acceptance or security approval.
 
-### 1. Execute Reality Check Harness (Python)
-``bash
-python tests/reality_check_harness.py
-``
+## Scope and safety
 
-### 2. Run the High-Performance Rust State Engine
-``bash
-cargo run
-``
-
----
-
-## Reality Check Verification
-Interledger Gate enforces strict pre-deployment verification: all invariants, cryptographic proofs, and micro-escrow contracts must achieve a **100/100 Genuine Green** rating before mainnet settlement.
+The existing `contracts/LaunchpadToken.sol` is **not audited** and is outside the offline checker. Do not deploy, fund, or rely on it. Existing architectural marketing claims are not evidence of working RPC, PQC, x402, Conway, AI, or tokenomics integrations. Real ILPv4 packet parsing, fulfillment/condition checks, authenticated peers, durable replay prevention, adversarial integration tests, and independent review remain future work. No secrets or paid network calls are required.
